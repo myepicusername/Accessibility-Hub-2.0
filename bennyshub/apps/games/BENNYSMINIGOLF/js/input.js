@@ -195,30 +195,6 @@ class InputHandler {
             this.backwardScanInterval = null;
         }
     }
-    
-    // Cleanup all timers - called on page unload
-    cleanup() {
-        console.log('[MiniGolf Input] Cleaning up all timers');
-        this.stopBackwardScan();
-        if (this.spaceHoldTimeout) {
-            clearTimeout(this.spaceHoldTimeout);
-            this.spaceHoldTimeout = null;
-        }
-        if (this.pauseHoldTimeout) {
-            clearTimeout(this.pauseHoldTimeout);
-            this.pauseHoldTimeout = null;
-        }
-        this.spacePressed = false;
-        this.enterPressed = false;
-        this.pauseTriggered = false;
-        
-        // Notify parent hub
-        if (window.parent && window.parent !== window) {
-            try {
-                window.parent.postMessage({ type: 'narbe-iframe-cleanup' }, '*');
-            } catch (e) {}
-        }
-    }
 
     trigger(event, data) {
         if (this.onEvent) {
@@ -233,8 +209,3 @@ class InputHandler {
 }
 
 const Input = new InputHandler();
-
-// Register cleanup on page unload
-window.addEventListener('beforeunload', () => Input.cleanup());
-window.addEventListener('unload', () => Input.cleanup());
-window.addEventListener('pagehide', () => Input.cleanup());
